@@ -1,12 +1,13 @@
 package tk.mybatis.springboot.service;
 
 import com.alibaba.fastjson.JSONArray;
-import org.apache.tomcat.util.buf.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import tk.mybatis.mapper.util.StringUtil;
 import tk.mybatis.springboot.mapper.*;
 import tk.mybatis.springboot.model.TbPickGiveCarOrder;
 import tk.mybatis.springboot.model.TbPickGiveCarOrderOld;
@@ -15,7 +16,6 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Service
@@ -91,12 +91,14 @@ public class SqlScriptService {
      *
      * @return
      */
+    @Transactional(rollbackFor = Throwable.class)
     public String analysisSqlScript() {
         for (int i = 0; i < targetTables.length; i++) {
             if (targetTables[i].equalsIgnoreCase("tb_pick_give_car_order")) {
                 //读取json文件内容
                 List<TbPickGiveCarOrder> list = readSqlScriptFile(sourceTables[i], TbPickGiveCarOrder.class);
                 //插入数据库
+
                 list.parallelStream().forEach(element -> {
                     tbPickGiveCarOrderMapper.insertRecord(element);
                 });
@@ -110,6 +112,7 @@ public class SqlScriptService {
             } else if (targetTables[i].equalsIgnoreCase("tb_maintenance_order_saic_assess_info_old")) {
 
             }
+
         }
 
 
@@ -160,7 +163,7 @@ public class SqlScriptService {
         JSONArray jsonArray = new JSONArray();
         try {
             //清洗数据
-            cleanData(jsonArray,list,tClass);
+            cleanData(jsonArray, list, tClass);
 
             File file = new File(sourceDir + tableName + suffix);
             //判断文件是否存在，若不存在则新建
@@ -189,30 +192,39 @@ public class SqlScriptService {
 
     /**
      * 新旧表数据字段转换
+     *
      * @param jsonArray
      */
-    private <T> void cleanData(JSONArray jsonArray,List<T> list, Class<T> tClass){
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private <T> void cleanData(JSONArray jsonArray, List<T> list, Class<T> tClass) {
+
         if (tClass.getSimpleName().equals(TbPickGiveCarOrderOld.class.getSimpleName())) {
             //转成目标库表字段
             list.parallelStream().forEach(e -> {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                 TbPickGiveCarOrderOld pgcOld = (TbPickGiveCarOrderOld) e;
                 TbPickGiveCarOrder tbPickGiveCarOrder = new TbPickGiveCarOrder();
                 BeanUtils.copyProperties(e, tbPickGiveCarOrder);
                 //手动设置未匹配的字段
                 try {
 
-                    if (!pgcOld.getBusinessTime().isEmpty()) {
+                    if (!StringUtil.isEmpty(pgcOld.getBusinessTime())) {
                         tbPickGiveCarOrder.setBusinessTime(sdf.parse(pgcOld.getBusinessTime()));
                     }
                     tbPickGiveCarOrder.setIsValid(true);
-                    tbPickGiveCarOrder.setOrderStatus(Byte.parseByte(pgcOld.getOrderStatus()));
-                    tbPickGiveCarOrder.setOrderType(Byte.parseByte(pgcOld.getOrderStatus()));
-                    tbPickGiveCarOrder.setPayMethod(Byte.parseByte(pgcOld.getPayMethod()));
-                    if (!pgcOld.getSalerTime().isEmpty()) {
+                    if (StringUtil.isEmpty(pgcOld.getOrderStatus())) {
+                        tbPickGiveCarOrder.setOrderStatus(Byte.parseByte(pgcOld.getOrderStatus()));
+                    }
+                    if (StringUtil.isEmpty(pgcOld.getOrderStatus())) {
+                        tbPickGiveCarOrder.setOrderType(Byte.parseByte(pgcOld.getOrderStatus()));
+                    }
+                    if (!StringUtil.isEmpty(pgcOld.getPayMethod())) {
+                        tbPickGiveCarOrder.setPayMethod(Byte.parseByte(pgcOld.getPayMethod()));
+                    }
+                    if (!StringUtil.isEmpty(pgcOld.getSalerTime())) {
                         tbPickGiveCarOrder.setSalerTime(sdf.parse(pgcOld.getSalerTime()));
                     }
                 } catch (ParseException ex) {
+
                     LOGGER.error("Exception:", ex);
                     throw new RuntimeException(ex.getMessage());
                 }

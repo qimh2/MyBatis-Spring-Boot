@@ -68,7 +68,7 @@
     user_address,
     </if>
     <if test="businessTime != null">
-    business_time
+    business_time,
     </if>
     <if test="stationCode != null">
     station_code,
@@ -136,21 +136,21 @@
       <if test="bookingOrderId != null">
         #{bookingOrderId} ,
       </if>
-      <if test="bookingOrderId != null">
-        #{bookingOrderId}  ,
+      <if test="businessOrderId != null">
+        #{businessOrderId}  ,
       </if>
-    <if test="orderType != null">
-      #{orderType}  ,
-    </if>
-    <if test="code != null">
-      #{code}  ,
-    </if>
-    <if test="userId != null">
-      #{userId},
-    </if>
-    <if test="brandCode != null">
-      #{brandCode}  ,
-    </if>
+      <if test="orderType != null">
+        #{orderType}  ,
+      </if>
+      <if test="code != null">
+        #{code}  ,
+      </if>
+      <if test="userId != null">
+        #{userId},
+      </if>
+      <if test="brandCode != null">
+        #{brandCode}  ,
+      </if>
       <if test="userName != null">
         #{userName},
       </if>
