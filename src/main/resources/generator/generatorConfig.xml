@@ -27,7 +27,7 @@
         <javaClientGenerator targetPackage="tk.mybatis.springboot.mapper" targetProject="src/main/java"
                              type="XMLMAPPER"/>
 
-        <table tableName="country">
+        <table tableName="tb_booking_audio_info">
             <!--mysql 配置-->
             <generatedKey column="id" sqlStatement="Mysql" identity="true"/>
             <!--oracle 配置-->

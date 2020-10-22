@@ -52,6 +52,11 @@ public class CityController {
         List<City> countryList = cityService.getAll(city);
         return new PageInfo<City>(countryList);
     }
+    @RequestMapping("/queryCity")
+    public List<City> queryCity(City city) {
+        List<City> countryList = cityService.queryCity();
+        return countryList;
+    }
 
     @RequestMapping(value = "/add")
     public City add() {

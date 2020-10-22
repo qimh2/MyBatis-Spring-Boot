@@ -49,6 +49,11 @@ public class CityService {
         return cityMapper.selectAll();
     }
 
+    public List<City> queryCity() {
+
+        return cityMapper.queryCity();
+    }
+
     public City getById(Integer id) {
         return cityMapper.selectByPrimaryKey(id);
     }

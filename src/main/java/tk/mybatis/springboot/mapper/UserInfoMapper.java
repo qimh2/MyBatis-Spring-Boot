@@ -24,6 +24,7 @@
 
 package tk.mybatis.springboot.mapper;
 
+import org.springframework.stereotype.Repository;
 import tk.mybatis.springboot.model.UserInfo;
 import tk.mybatis.springboot.util.MyMapper;
 
@@ -31,5 +32,6 @@ import tk.mybatis.springboot.util.MyMapper;
  * @author liuzh_3nofxnp
  * @since 2016-01-22 22:17
  */
+@Repository
 public interface UserInfoMapper extends MyMapper<UserInfo> {
 }

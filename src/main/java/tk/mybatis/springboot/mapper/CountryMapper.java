@@ -25,9 +25,10 @@
 package tk.mybatis.springboot.mapper;
 
 import org.apache.ibatis.annotations.Select;
+import org.springframework.stereotype.Repository;
 import tk.mybatis.springboot.model.Country;
 import tk.mybatis.springboot.util.MyMapper;
-
+@Repository
 public interface CountryMapper extends MyMapper<Country> {
 
     @Select("select * from country limit 1")
