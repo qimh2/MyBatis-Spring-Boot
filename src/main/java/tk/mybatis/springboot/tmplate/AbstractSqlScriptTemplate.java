@@ -20,16 +20,18 @@ public abstract class AbstractSqlScriptTemplate {
     @Value("${sqlScript.suffix}")
     private String suffix;
 
-    protected static final String[] sourceTables;
-    protected static final String[] targetTables;
+    @Value("${sqlScript.sourceTables}")
+    protected String[] sourceTables;
+    @Value("${sqlScript.targetTables}")
+    protected String[] targetTables;
 
-    static {
-        sourceTables = new String[]{"tb_pick_give_car_order_old", "tb_pick_give_car_order_img_old",
-                "tb_maintenance_order_saic_assess_old", "tb_maintenance_order_saic_assess_tob_old", "tb_maintenance_order_saic_assess_info_old"};
-
-        targetTables = new String[]{"tb_pick_give_car_order", "tb_pick_give_car_order_img",
-                "tb_booking_assess", "tb_booking_assess_item", "tb_booking_audio_info"};
-    }
+//    static {
+//        sourceTables = new String[]{"tb_pick_give_car_order_old", "tb_pick_give_car_order_img_old",
+//                "tb_maintenance_order_saic_assess_old", "tb_maintenance_order_saic_assess_tob_old", "tb_maintenance_order_saic_assess_info_old"};
+//
+//        targetTables = new String[]{"tb_pick_give_car_order", "tb_pick_give_car_order_img",
+//                "tb_booking_assess", "tb_booking_assess_item", "tb_booking_audio_info"};
+//    }
 
 
     /**
