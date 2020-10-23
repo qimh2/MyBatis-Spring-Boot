@@ -77,7 +77,7 @@ public class MaintenanceOrderSaicAssessTobOldService extends AbstractSqlScriptTe
             BeanUtils.copyProperties(e, tbBookingAssessItem);
             //手动设置未匹配的字段
             try {
-
+                tbBookingAssessItem.setLastUpdateDate(pgcOld.getUpdateTime());
                 if ("N".equalsIgnoreCase(pgcOld.getDeleted())){
                     tbBookingAssessItem.setIsValid(true);
                 }else{
