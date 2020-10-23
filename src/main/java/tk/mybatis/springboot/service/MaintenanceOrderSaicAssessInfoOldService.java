@@ -19,6 +19,11 @@ public class MaintenanceOrderSaicAssessInfoOldService extends AbstractSqlScriptT
 
     @Autowired
     private TbBookingAudioInfoMapper tbBookingAudioInfoMapper;
+
+    {
+        tableIndex = 4;
+    }
+
     /**
      * 生成sql Json 脚本
      *
@@ -26,9 +31,10 @@ public class MaintenanceOrderSaicAssessInfoOldService extends AbstractSqlScriptT
      */
     @Override
     public String generatorSqlScript() {
+
         List<TbMaintenanceOrderSaicAssessInfoOld> list = tbMaintenanceOrderSaicAssessInfoOldMapper.selectAll();
         //生成文件
-        saveSqlScriptFile(list, TbMaintenanceOrderSaicAssessInfoOld.class, sourceTables[4]);
+        saveSqlScriptFile(list, TbMaintenanceOrderSaicAssessInfoOld.class, sourceTables[tableIndex]);
         return "success";
     }
 
@@ -40,7 +46,7 @@ public class MaintenanceOrderSaicAssessInfoOldService extends AbstractSqlScriptT
     @Override
     public String analysisSqlScript() {
         //读取json文件内容
-        List<TbBookingAudioInfo> list = readSqlScriptFile(sourceTables[4], TbBookingAudioInfo.class);
+        List<TbBookingAudioInfo> list = readSqlScriptFile(sourceTables[tableIndex], TbBookingAudioInfo.class);
         //插入数据库
         list.parallelStream().forEach(element -> {
             tbBookingAudioInfoMapper.insert(element);
@@ -71,6 +77,7 @@ public class MaintenanceOrderSaicAssessInfoOldService extends AbstractSqlScriptT
             //手动设置未匹配的字段
             try {
 
+                tbBookingAudioInfo.setLastUpdateDate(pgcOld.getUpdateTime());
                 if ("N".equalsIgnoreCase(pgcOld.getDeleted())){
                     tbBookingAudioInfo.setIsValid(true);
                 }else{

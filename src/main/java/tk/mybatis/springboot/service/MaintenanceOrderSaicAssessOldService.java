@@ -13,13 +13,16 @@ import tk.mybatis.springboot.tmplate.AbstractSqlScriptTemplate;
 import java.text.SimpleDateFormat;
 import java.util.List;
 @Service
-public class MaintenanceOrderSaicAssessOld extends AbstractSqlScriptTemplate {
+public class MaintenanceOrderSaicAssessOldService extends AbstractSqlScriptTemplate {
     @Autowired
     private TbMaintenanceOrderSaicAssessOldMapper tbMaintenanceOrderSaicAssessOldMapper;
 
     @Autowired
     private TbBookingAssessMapper tbBookingAssessMapper;
 
+    {
+        tableIndex = 2;
+    }
 
     /**
      * 生成sql Json 脚本
@@ -31,7 +34,7 @@ public class MaintenanceOrderSaicAssessOld extends AbstractSqlScriptTemplate {
         //获取数据
         List<TbMaintenanceOrderSaicAssessOld> list = tbMaintenanceOrderSaicAssessOldMapper.selectAll();
         //生成文件
-        saveSqlScriptFile(list, TbMaintenanceOrderSaicAssessOld.class, sourceTables[2]);
+        saveSqlScriptFile(list, TbMaintenanceOrderSaicAssessOld.class, sourceTables[tableIndex]);
 
         return "success";
     }
@@ -44,7 +47,7 @@ public class MaintenanceOrderSaicAssessOld extends AbstractSqlScriptTemplate {
     @Override
     public String analysisSqlScript() {
         //读取json文件内容
-        List<TbBookingAssess> list = readSqlScriptFile(sourceTables[2], TbBookingAssess.class);
+        List<TbBookingAssess> list = readSqlScriptFile(sourceTables[tableIndex], TbBookingAssess.class);
         //插入数据库
         list.parallelStream().forEach(element -> {
             tbBookingAssessMapper.insert(element);

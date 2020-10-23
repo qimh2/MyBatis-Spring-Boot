@@ -8,7 +8,7 @@ public class SqlScriptTemplateService {
     @Autowired
     private MaintenanceOrderSaicAssessInfoOldService maintenanceOrderSaicAssessInfoOldService;
     @Autowired
-    private MaintenanceOrderSaicAssessOld maintenanceOrderSaicAssessOld;
+    private MaintenanceOrderSaicAssessOldService maintenanceOrderSaicAssessOldService;
     @Autowired
     private  MaintenanceOrderSaicAssessTobOldService maintenanceOrderSaicAssessTobOldService;
     @Autowired
@@ -23,7 +23,7 @@ public class SqlScriptTemplateService {
      */
     public String generatorSqlScript(){
         maintenanceOrderSaicAssessInfoOldService.generatorSqlScript();
-        maintenanceOrderSaicAssessOld.generatorSqlScript();
+        maintenanceOrderSaicAssessOldService.generatorSqlScript();
         maintenanceOrderSaicAssessTobOldService.generatorSqlScript();
         pickGiveCarOrderImgOldService.generatorSqlScript();
         pickGiveCarOrderOldService.generatorSqlScript();
@@ -37,7 +37,7 @@ public class SqlScriptTemplateService {
      */
     public String analysisSqlScript(){
         maintenanceOrderSaicAssessInfoOldService.analysisSqlScript();
-        maintenanceOrderSaicAssessOld.analysisSqlScript();
+        maintenanceOrderSaicAssessOldService.analysisSqlScript();
         maintenanceOrderSaicAssessTobOldService.analysisSqlScript();
         pickGiveCarOrderImgOldService.analysisSqlScript();
         pickGiveCarOrderOldService.analysisSqlScript();

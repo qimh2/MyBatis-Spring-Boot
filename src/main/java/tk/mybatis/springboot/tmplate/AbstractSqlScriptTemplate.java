@@ -13,6 +13,7 @@ import java.util.List;
 public abstract class AbstractSqlScriptTemplate {
 
     protected static final Logger LOGGER = LoggerFactory.getLogger(SqlScriptService.class);
+    protected int tableIndex = 0;
 
     @Value("${sqlScript.sourceDir}")
     private String sourceDir;

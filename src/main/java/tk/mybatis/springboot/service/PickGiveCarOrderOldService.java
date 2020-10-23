@@ -23,6 +23,10 @@ public class PickGiveCarOrderOldService extends AbstractSqlScriptTemplate {
     private TbPickGiveCarOrderMapper tbPickGiveCarOrderMapper;
 
 
+    {
+        tableIndex = 0;
+    }
+
     /**
      * 生成sql Json 脚本
      *
@@ -33,7 +37,7 @@ public class PickGiveCarOrderOldService extends AbstractSqlScriptTemplate {
         //获取数据
         List<TbPickGiveCarOrderOld> list = tbPickGiveCarOrderOldMapper.selectAll();
         //生成文件
-        saveSqlScriptFile(list, TbPickGiveCarOrderOld.class, sourceTables[0]);
+        saveSqlScriptFile(list, TbPickGiveCarOrderOld.class, sourceTables[tableIndex]);
         return "success";
     }
 
@@ -45,7 +49,7 @@ public class PickGiveCarOrderOldService extends AbstractSqlScriptTemplate {
     @Override
     public String analysisSqlScript() {
         //读取json文件内容
-        List<TbPickGiveCarOrder> list = readSqlScriptFile(sourceTables[0], TbPickGiveCarOrder.class);
+        List<TbPickGiveCarOrder> list = readSqlScriptFile(sourceTables[tableIndex], TbPickGiveCarOrder.class);
         //插入数据库
         list.parallelStream().forEach(element -> {
             tbPickGiveCarOrderMapper.insertRecord(element);

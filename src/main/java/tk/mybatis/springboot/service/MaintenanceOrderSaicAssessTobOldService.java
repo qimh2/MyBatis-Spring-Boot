@@ -21,6 +21,9 @@ public class MaintenanceOrderSaicAssessTobOldService extends AbstractSqlScriptTe
     @Autowired
     private TbBookingAssessItemMapper tbBookingAssessItemMapper;
 
+    {
+        tableIndex = 3;
+    }
 
     /**
      * 生成sql Json 脚本
@@ -32,7 +35,7 @@ public class MaintenanceOrderSaicAssessTobOldService extends AbstractSqlScriptTe
         //获取数据
         List<TbMaintenanceOrderSaicAssessTobOld> list = tbMaintenanceOrderSaicAssessTobOldMapper.selectAll();
         //生成文件
-        saveSqlScriptFile(list, TbMaintenanceOrderSaicAssessTobOld.class, sourceTables[3]);
+        saveSqlScriptFile(list, TbMaintenanceOrderSaicAssessTobOld.class, sourceTables[tableIndex]);
         return "success";
     }
 
@@ -44,7 +47,7 @@ public class MaintenanceOrderSaicAssessTobOldService extends AbstractSqlScriptTe
     @Override
     public String analysisSqlScript() {
         //读取json文件内容
-        List<TbBookingAssessItem> list = readSqlScriptFile(sourceTables[3], TbBookingAssessItem.class);
+        List<TbBookingAssessItem> list = readSqlScriptFile(sourceTables[tableIndex], TbBookingAssessItem.class);
         //插入数据库
         list.parallelStream().forEach(element -> {
             tbBookingAssessItemMapper.insert(element);
