@@ -5,12 +5,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.util.StringUtil;
 import tk.mybatis.springboot.mapper.*;
-import tk.mybatis.springboot.model.TbPickGiveCarOrder;
-import tk.mybatis.springboot.model.TbPickGiveCarOrderOld;
+import tk.mybatis.springboot.model.*;
 
 import java.io.*;
 import java.text.ParseException;
@@ -23,8 +23,10 @@ public class SqlScriptService {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SqlScriptService.class);
 
-    private String sourceDir = "D:\\tb-josn-file\\";
-    private String suffix = ".json";
+    @Value("${sqlScript.sourceDir}")
+    private String sourceDir;
+    @Value("${sqlScript.suffix}")
+    private String suffix;
 
 
     @Autowired
@@ -34,19 +36,21 @@ public class SqlScriptService {
     @Autowired
     private TbBookingAudioInfoMapper tbBookingAudioInfoMapper;
     @Autowired
-    private TbMaintenanceOrderSaicAssessInfoOldMapper tbMaintenanceOrderSaicAssessInfoOldMapper;
-    @Autowired
     private TbMaintenanceOrderSaicAssessOldMapper tbMaintenanceOrderSaicAssessOldMapper;
     @Autowired
     private TbMaintenanceOrderSaicAssessTobOldMapper tbMaintenanceOrderSaicAssessTobOldMapper;
     @Autowired
-    private TbPickGiveCarOrderImgMapper tbPickGiveCarOrderImgMapper;
+    private TbMaintenanceOrderSaicAssessInfoOldMapper tbMaintenanceOrderSaicAssessInfoOldMapper;
+
+
     @Autowired
-    private TbPickGiveCarOrderImgOldMapper tbPickGiveCarOrderImgOldMapper;
+    private TbPickGiveCarOrderImgMapper tbPickGiveCarOrderImgMapper;
     @Autowired
     private TbPickGiveCarOrderMapper tbPickGiveCarOrderMapper;
     @Autowired
     private TbPickGiveCarOrderOldMapper tbPickGiveCarOrderOldMapper;
+    @Autowired
+    private TbPickGiveCarOrderImgOldMapper tbPickGiveCarOrderImgOldMapper;
 
     private static final String[] sourceTables;
     private static final String[] targetTables;
@@ -72,14 +76,28 @@ public class SqlScriptService {
                 List<TbPickGiveCarOrderOld> list = tbPickGiveCarOrderOldMapper.selectAll();
                 //生成文件
                 saveSqlScriptFile(list, TbPickGiveCarOrderOld.class, sourceTables[i]);
-            } else if (sourceTables[i].equalsIgnoreCase("tb_pick_give_car_order_old")) {
+            } else if (sourceTables[i].equalsIgnoreCase("tb_pick_give_car_order_img_old")) {
+                //获取数据
+                List<TbPickGiveCarOrderImgOld> list = tbPickGiveCarOrderImgOldMapper.selectAll();
+                //生成文件
+                saveSqlScriptFile(list, TbPickGiveCarOrderImgOld.class, sourceTables[i]);
 
             } else if (sourceTables[i].equalsIgnoreCase("tb_maintenance_order_saic_assess_old")) {
+                //获取数据
+                List<TbMaintenanceOrderSaicAssessOld> list = tbMaintenanceOrderSaicAssessOldMapper.selectAll();
+                //生成文件
+                saveSqlScriptFile(list, TbMaintenanceOrderSaicAssessOld.class, sourceTables[i]);
 
             } else if (sourceTables[i].equalsIgnoreCase("tb_maintenance_order_saic_assess_tob_old")) {
-
+                //获取数据
+                List<TbMaintenanceOrderSaicAssessTobOld> list = tbMaintenanceOrderSaicAssessTobOldMapper.selectAll();
+                //生成文件
+                saveSqlScriptFile(list, TbMaintenanceOrderSaicAssessTobOld.class, sourceTables[i]);
             } else if (sourceTables[i].equalsIgnoreCase("tb_maintenance_order_saic_assess_info_old")) {
 
+                List<TbMaintenanceOrderSaicAssessInfoOld> list = tbMaintenanceOrderSaicAssessInfoOldMapper.selectAll();
+                //生成文件
+                saveSqlScriptFile(list, TbMaintenanceOrderSaicAssessInfoOld.class, sourceTables[i]);
             }
         }
 
@@ -98,19 +116,63 @@ public class SqlScriptService {
                 //读取json文件内容
                 List<TbPickGiveCarOrder> list = readSqlScriptFile(sourceTables[i], TbPickGiveCarOrder.class);
                 //插入数据库
-
                 list.parallelStream().forEach(element -> {
                     tbPickGiveCarOrderMapper.insertRecord(element);
                 });
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
 
-            } else if (targetTables[i].equalsIgnoreCase("tb_pick_give_car_order_old")) {
-
-            } else if (targetTables[i].equalsIgnoreCase("tb_maintenance_order_saic_assess_old")) {
-
-            } else if (targetTables[i].equalsIgnoreCase("tb_maintenance_order_saic_assess_tob_old")) {
-
-            } else if (targetTables[i].equalsIgnoreCase("tb_maintenance_order_saic_assess_info_old")) {
-
+            } else if (targetTables[i].equalsIgnoreCase("tb_pick_give_car_order_img")) {
+                //读取json文件内容
+                List<TbPickGiveCarOrderImg> list = readSqlScriptFile(sourceTables[i], TbPickGiveCarOrderImg.class);
+                //插入数据库
+                list.parallelStream().forEach(element -> {
+                    tbPickGiveCarOrderImgMapper.insert(element);
+                });
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else if (targetTables[i].equalsIgnoreCase("tb_booking_assess")) {
+                //读取json文件内容
+                List<TbBookingAssess> list = readSqlScriptFile(sourceTables[i], TbBookingAssess.class);
+                //插入数据库
+                list.parallelStream().forEach(element -> {
+                    tbBookingAssessMapper.insert(element);
+                });
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else if (targetTables[i].equalsIgnoreCase("tb_booking_assess_item")) {
+                //读取json文件内容
+                List<TbBookingAssessItem> list = readSqlScriptFile(sourceTables[i], TbBookingAssessItem.class);
+                //插入数据库
+                list.parallelStream().forEach(element -> {
+                    tbBookingAssessItemMapper.insert(element);
+                });
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            } else if (targetTables[i].equalsIgnoreCase("tb_booking_audio_info")) {
+                //读取json文件内容
+                List<TbBookingAudioInfo> list = readSqlScriptFile(sourceTables[i], TbBookingAudioInfo.class);
+                //插入数据库
+                list.parallelStream().forEach(element -> {
+                    tbBookingAudioInfoMapper.insert(element);
+                });
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
 
         }
@@ -223,6 +285,11 @@ public class SqlScriptService {
                     if (!StringUtil.isEmpty(pgcOld.getSalerTime())) {
                         tbPickGiveCarOrder.setSalerTime(sdf.parse(pgcOld.getSalerTime()));
                     }
+                    if ("N".equalsIgnoreCase(pgcOld.getDeleted())){
+                        tbPickGiveCarOrder.setIsValid(true);
+                    }else{
+                        tbPickGiveCarOrder.setIsValid(false);
+                    }
                 } catch (ParseException ex) {
 
                     LOGGER.error("Exception:", ex);
@@ -232,6 +299,97 @@ public class SqlScriptService {
                 LOGGER.info("TbPickGiveCarOrderOld: {}", e);
                 LOGGER.info("tbPickGiveCarOrder: {}", tbPickGiveCarOrder);
                 jsonArray.add(tbPickGiveCarOrder);
+            });
+        }else if (tClass.getSimpleName().equals(TbPickGiveCarOrderImgOld.class.getSimpleName())){
+            //转成目标库表字段
+            list.parallelStream().forEach(e -> {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                TbPickGiveCarOrderImgOld pgcOld = (TbPickGiveCarOrderImgOld) e;
+                TbPickGiveCarOrderImg tbPickGiveCarOrderImg = new TbPickGiveCarOrderImg();
+                BeanUtils.copyProperties(e, tbPickGiveCarOrderImg);
+                //手动设置未匹配的字段
+                try {
+
+                    if ("N".equalsIgnoreCase(pgcOld.getDeleted())){
+                        tbPickGiveCarOrderImg.setIsValid(true);
+                    }else{
+                        tbPickGiveCarOrderImg.setIsValid(false);
+                    }
+                } catch (Exception ex) {
+                    LOGGER.error("Exception:", ex);
+                    throw new RuntimeException(ex.getMessage());
+                }
+
+                LOGGER.info("TbPickGiveCarOrderImgOld: {}", e);
+                LOGGER.info("tbPickGiveCarOrderImg: {}", tbPickGiveCarOrderImg);
+                jsonArray.add(tbPickGiveCarOrderImg);
+            });
+        }else if (tClass.getSimpleName().equals(TbMaintenanceOrderSaicAssessOld.class.getSimpleName())){
+            //转成目标库表字段
+            list.parallelStream().forEach(e -> {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                TbMaintenanceOrderSaicAssessOld pgcOld = (TbMaintenanceOrderSaicAssessOld) e;
+                TbBookingAssess tbBookingAssess = new TbBookingAssess();
+                BeanUtils.copyProperties(e, tbBookingAssess);
+                //手动设置未匹配的字段
+                try {
+                    tbBookingAssess.setIsValid(true);
+                } catch (Exception ex) {
+                    LOGGER.error("Exception:", ex);
+                    throw new RuntimeException(ex.getMessage());
+                }
+
+                LOGGER.info("TbPickGiveCarOrderImgOld: {}", e);
+                LOGGER.info("tbPickGiveCarOrderImg: {}", tbBookingAssess);
+                jsonArray.add(tbBookingAssess);
+            });
+        }else if (tClass.getSimpleName().equals(TbMaintenanceOrderSaicAssessTobOld.class.getSimpleName())){
+            //转成目标库表字段
+            list.parallelStream().forEach(e -> {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                TbMaintenanceOrderSaicAssessTobOld pgcOld = (TbMaintenanceOrderSaicAssessTobOld) e;
+                TbBookingAssessItem tbBookingAssessItem = new TbBookingAssessItem();
+                BeanUtils.copyProperties(e, tbBookingAssessItem);
+                //手动设置未匹配的字段
+                try {
+
+                    if ("N".equalsIgnoreCase(pgcOld.getDeleted())){
+                        tbBookingAssessItem.setIsValid(true);
+                    }else{
+                        tbBookingAssessItem.setIsValid(false);
+                    }
+                } catch (Exception ex) {
+                    LOGGER.error("Exception:", ex);
+                    throw new RuntimeException(ex.getMessage());
+                }
+
+                LOGGER.info("TbMaintenanceOrderSaicAssessTobOld: {}", e);
+                LOGGER.info("tbBookingAssessItem: {}", tbBookingAssessItem);
+                jsonArray.add(tbBookingAssessItem);
+            });
+        }else if (tClass.getSimpleName().equals(TbMaintenanceOrderSaicAssessInfoOld.class.getSimpleName())){
+            //转成目标库表字段
+            list.parallelStream().forEach(e -> {
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                TbMaintenanceOrderSaicAssessInfoOld pgcOld = (TbMaintenanceOrderSaicAssessInfoOld) e;
+                TbBookingAudioInfo tbBookingAudioInfo = new TbBookingAudioInfo();
+                BeanUtils.copyProperties(e, tbBookingAudioInfo);
+                //手动设置未匹配的字段
+                try {
+
+                    if ("N".equalsIgnoreCase(pgcOld.getDeleted())){
+                        tbBookingAudioInfo.setIsValid(true);
+                    }else{
+                        tbBookingAudioInfo.setIsValid(false);
+                    }
+                } catch (Exception ex) {
+                    LOGGER.error("Exception:", ex);
+                    throw new RuntimeException(ex.getMessage());
+                }
+
+                LOGGER.info("TbMaintenanceOrderSaicAssessInfoOld: {}", e);
+                LOGGER.info("tbBookingAudioInfo: {}", tbBookingAudioInfo);
+                jsonArray.add(tbBookingAudioInfo);
             });
         }
     }
