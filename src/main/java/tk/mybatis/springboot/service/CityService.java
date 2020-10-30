@@ -27,6 +27,7 @@ package tk.mybatis.springboot.service;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.springboot.mapper.CityMapper;
 import tk.mybatis.springboot.model.City;
 
@@ -68,5 +69,15 @@ public class CityService {
         } else {
             cityMapper.insert(country);
         }
+    }
+
+    @Transactional(rollbackFor = Throwable.class)
+    public int insert(){
+        City city = new City();
+        city.setName("安徽");
+        city.setState("安徽");
+        int num = cityMapper.insert(city);
+        int i = 9/0;
+        return num;
     }
 }

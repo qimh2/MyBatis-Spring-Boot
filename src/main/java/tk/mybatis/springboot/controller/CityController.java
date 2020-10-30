@@ -87,4 +87,9 @@ public class CityController {
         result.put("msg", msg);
         return result;
     }
+
+    @RequestMapping(value = "/insert", method = RequestMethod.POST)
+    public Integer insert() {
+        return cityService.insert();
+    }
 }
