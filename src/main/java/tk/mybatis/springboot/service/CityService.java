@@ -73,11 +73,15 @@ public class CityService {
 
     @Transactional(rollbackFor = Throwable.class)
     public int insert(){
+        int num = cityMapper.insert(getCity());
+        int i = 9/0;
+        return num;
+    }
+
+    private City getCity() {
         City city = new City();
         city.setName("安徽");
         city.setState("安徽");
-        int num = cityMapper.insert(city);
-        int i = 9/0;
-        return num;
+        return city;
     }
 }
