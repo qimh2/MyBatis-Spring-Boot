@@ -3,6 +3,9 @@ package tk.mybatis.springboot.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tk.mybatis.springboot.mapper.TbUserBrandMapper;
+import tk.mybatis.springboot.model.TbUserBrand;
+
+import java.util.List;
 import tk.mybatis.springboot.mapper.TbUserBrandRangMapper;
 import tk.mybatis.springboot.model.TbUserBrand;
 import tk.mybatis.springboot.model.TbUserBrandRang;
