@@ -53,4 +53,8 @@
     AND b.brand_code = #{brandCode}
 
   </select>
+
+  <select id="queryUserBrand" parameterType="tk.mybatis.springboot.model.TbUserBrand" resultMap="BaseResultMap">
+    select * from tb_user_brand where user_id = #{userId}
+  </select>
 </mapper>

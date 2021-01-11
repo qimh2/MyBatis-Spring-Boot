@@ -10,4 +10,5 @@ public interface TbUserBrandMapper extends MyMapper<TbUserBrand> {
     List<TbUserBrand>  getUserBrands(TbUserBrand tbUserBrand);
 
     List<TbUserBrand>  getUserBrandsWithPart(TbUserBrand tbUserBrand);
+    List<TbUserBrand> queryUserBrand(TbUserBrand tbUserBrand);
 }
