@@ -25,6 +25,8 @@
 package tk.mybatis.springboot.mapper;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.springboot.model.City;
 import tk.mybatis.springboot.util.MyMapper;
 
@@ -38,4 +40,7 @@ import java.util.List;
 public interface CityMapper extends MyMapper<City> {
 
     List<City> queryCity();
+
+    @Transactional(propagation = Propagation.REQUIRES_NEW)
+    int updateCity(City city);
 }

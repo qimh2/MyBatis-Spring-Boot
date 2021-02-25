@@ -92,4 +92,9 @@ public class CityController {
     public Integer insert() {
         return cityService.insert();
     }
+
+    @RequestMapping(value = "/updateCity", method = RequestMethod.POST)
+    public Integer updateCity(@RequestBody City city) {
+        return cityService.updateCity(city);
+    }
 }

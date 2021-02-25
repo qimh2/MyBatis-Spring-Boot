@@ -24,7 +24,10 @@
 
 package tk.mybatis.springboot.service;
 
+import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +43,7 @@ import java.util.List;
 @Service
 public class CityService {
 
+    private static final Logger LOGGER = LoggerFactory.getLogger(CityService.class);
     @Autowired
     private CityMapper cityMapper;
 
@@ -84,4 +88,20 @@ public class CityService {
         city.setState("安徽");
         return city;
     }
+
+    @Transactional(rollbackFor = Throwable.class)
+    public int updateCity(City city){
+
+        LOGGER.info("城市：{}", JSON.toJSONString(cityMapper.queryCity()));
+
+
+        int num = cityMapper.updateCity(city);
+        try {
+            Thread.sleep(60000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        return num;
+    }
+
 }

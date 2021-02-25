@@ -30,4 +30,8 @@
         select * from city
     </select>
 
+    <update id="updateCity" parameterType="tk.mybatis.springboot.model.City">
+        update city set name = #{name} WHERE id = #{id}
+    </update>
+
 </mapper>
