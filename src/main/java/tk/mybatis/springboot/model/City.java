@@ -24,10 +24,13 @@
 
 package tk.mybatis.springboot.model;
 
+import lombok.Data;
+
 /**
  * @author liuzh_3nofxnp
  * @since 2016-01-22 22:16
  */
+@Data
 public class City extends BaseEntity {
     private String name;
 
@@ -49,4 +52,12 @@ public class City extends BaseEntity {
         this.state = state;
     }
 
+
+    @Override
+    public String toString() {
+        return "City{" +
+            "name='" + name + '\'' +
+            ", state='" + state + '\'' +
+            '}';
+    }
 }
