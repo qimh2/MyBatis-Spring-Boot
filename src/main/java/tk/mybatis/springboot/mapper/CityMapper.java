@@ -24,6 +24,7 @@
 
 package tk.mybatis.springboot.mapper;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
@@ -43,4 +44,6 @@ public interface CityMapper extends MyMapper<City> {
 
     @Transactional(propagation = Propagation.REQUIRES_NEW)
     int updateCity(City city);
+
+    int updateBatchCity(@Param("citys") List<City> citys);
 }

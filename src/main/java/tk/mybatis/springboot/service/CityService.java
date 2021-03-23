@@ -26,6 +26,7 @@ package tk.mybatis.springboot.service;
 
 import com.alibaba.fastjson.JSON;
 import com.github.pagehelper.PageHelper;
+import java.util.ArrayList;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -102,6 +103,23 @@ public class CityService {
             e.printStackTrace();
         }
         return num;
+    }
+
+    public int updateBatchCity(){
+
+        List<City> cities = new ArrayList<>();
+        City city = new City();
+        city.setName("安徽");
+        city.setState("安徽");
+        city.setId(1);
+        cities.add(city);
+        City city2 = new City();
+        city2.setName("安徽2");
+        city2.setState("安徽2");
+        city2.setId(2);
+        cities.add(city2);
+
+        return cityMapper.updateBatchCity(cities);
     }
 
 }

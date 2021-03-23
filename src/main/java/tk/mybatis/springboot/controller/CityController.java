@@ -97,4 +97,9 @@ public class CityController {
     public Integer updateCity(@RequestBody City city) {
         return cityService.updateCity(city);
     }
+
+    @RequestMapping(value = "/updateBatchCities", method = RequestMethod.POST)
+    public Integer updateBatchCities() {
+        return cityService.updateBatchCity();
+    }
 }

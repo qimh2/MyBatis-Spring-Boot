@@ -34,4 +34,14 @@
         update city set name = #{name} WHERE id = #{id}
     </update>
 
+    <update id="updateBatchCity"  parameterType="java.util.List">
+        <foreach collection="citys" item="item" index="index" open="" close="" separator=";">
+            update city
+            <set>
+                name=#{item.name},
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
 </mapper>
