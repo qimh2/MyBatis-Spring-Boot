@@ -31,6 +31,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.PlatformTransactionManager;
+import org.springframework.transaction.TransactionDefinition;
+import org.springframework.transaction.TransactionException;
+import org.springframework.transaction.TransactionStatus;
 import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.springboot.mapper.CityMapper;
 import tk.mybatis.springboot.model.City;
@@ -47,6 +51,15 @@ public class CityService {
     private static final Logger LOGGER = LoggerFactory.getLogger(CityService.class);
     @Autowired
     private CityMapper cityMapper;
+
+
+    @Autowired
+
+    private PlatformTransactionManager platformTransactionManager;
+
+    @Autowired
+
+    private TransactionDefinition transactionDefinition;
 
     public List<City> getAll(City city) {
         if (city.getPage() != null && city.getRows() != null) {
@@ -76,10 +89,23 @@ public class CityService {
         }
     }
 
-    @Transactional(rollbackFor = Throwable.class)
+    //@Transactional(rollbackFor = Throwable.class)
     public int insert(){
-        int num = cityMapper.insert(getCity());
-        int i = 9/0;
+        int num = 0;
+        TransactionStatus transaction = platformTransactionManager.getTransaction(transactionDefinition);
+        try {
+
+            for (int i = 0; i < 100; i++) {
+                num = cityMapper.insert(getCity());
+            }
+
+//            int i = 9 / 0;
+            platformTransactionManager.commit(transaction);
+
+        } catch (Exception e) {
+            platformTransactionManager.rollback(transaction);
+            LOGGER.error("======method:insert exception:",e);
+        }
         return num;
     }
 

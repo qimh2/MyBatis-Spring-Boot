@@ -27,6 +27,7 @@ package tk.mybatis.springboot.service;
 import com.github.pagehelper.PageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.springboot.mapper.UserInfoMapper;
 import tk.mybatis.springboot.model.UserInfo;
 
@@ -56,12 +57,13 @@ public class UserInfoService {
     public void deleteById(Integer id) {
         userInfoMapper.deleteByPrimaryKey(id);
     }
-
+    @Transactional
     public void save(UserInfo country) {
         if (country.getId() != null) {
             userInfoMapper.updateByPrimaryKey(country);
         } else {
             userInfoMapper.insert(country);
         }
+        System.out.println("=====end=====");
     }
 }
